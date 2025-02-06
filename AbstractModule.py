@@ -9,7 +9,7 @@ class AbstractModule(ABC):
         pass
 
     @abstractmethod
-    def prep(self):
+    def prep(self, register_cmd_callback):
         pass
 
     @abstractmethod
