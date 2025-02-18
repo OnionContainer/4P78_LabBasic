@@ -1,20 +1,29 @@
 
 
+"""
+message: actuator_report
+content: {
+    "type": "actuator_report",
+    "is_start"(bool): true if actuator starts, false if it stops,
+    "key"(data type): description
+}
+"""
+
 class Message:
     def __init__(self, publisher, info):
         self.__publisher = publisher
         self.__info = info
-        self.__had_been_read = False
+        self.__is_checked = False
         """
         self.__publisher = the object that generated the message
         self.__info = the message, in key-value form
         """
 
     def is_read(self):
-        return self.__had_been_read
+        return self.__is_checked
 
-    def set_read(self):
-        self.__had_been_read = True
+    def set_checked(self):
+        self.__is_checked = True
 
     def get_info(self):
         return self.__info
@@ -25,6 +34,25 @@ class Message:
 class MessageBus:
     def __init__(self):
         self.__messages = []
+
+    function_dict = {}
+
+    @staticmethod
+    def register_event(event_key, func):
+        if MessageBus.function_dict.get(event_key) is None:
+            MessageBus.function_dict[event_key] = []
+        else:
+            MessageBus.function_dict[event_key].append(func)
+
+    @staticmethod
+    def emit_event(event_key, info):
+        if MessageBus.function_dict.get(event_key) is None:
+            print(f"No listener for event key: {event_key}")
+            return False
+        else:
+            for func in MessageBus.function_dict[event_key]:
+                func(info)
+            return True
 
     def push_message(self, publisher, content):
         """
@@ -41,13 +69,26 @@ class MessageBus:
         execute if yes.
         :return:
         """
-        # self.__messages.append(content)
+        m = Message(publisher, content)
+        self.__messages.append(m)
         pass
+
+    def delete_all_checked_messages(self):
+        self.__messages = [m for m in self.__messages if not m.is_read()]
+        
+    def get_length(self):
+        return len(self.__messages)
 
     def iterate_messages(self):
-        pass
+        return iter(self.__messages)
 
     def delete_message(self, message:Message):
+        """
+        explicitly delete a message whether it is checked or not
+        :param message:
+        :return:
+        """
+        self.__messages.remove(message)
         pass
 
 

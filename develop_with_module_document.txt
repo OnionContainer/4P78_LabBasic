@@ -1,0 +1,58 @@
+To organize and reuse our code we have several features to get familiar:
+
+1.configer
+2.AbstractModule
+3.register command
+4.receive and send message
+
+1.configer
+    look at Configer.py, there is a global variable configer.
+    once you import configer from Configer, you can access to this instance.
+    call get("key") to get data written in config.json
+    you can edit anything in your local config.json, but exclude it when you push it to github.
+
+2.AbstractModule
+    you can write your code in a module, to make it easy to merge and to be able to use some GUI features I made
+    there is only one GUI feature for now: command.
+    we can do something like adding a button in the future.
+
+    following these steps to add a module:
+        1.Create a folder for your module
+        2.Create a MyModule class that inherits AbstractModule
+        3.implement prep, update and quit
+            (you don't really need to do anything with quit)
+        4.go to Main.py, go to LabBasic.prep, add these code:
+            myModule = MyModule(self.__bus)
+            self.__modules.append(myModule)
+
+    after these, your module's update function will automatically be called once per 10ms.
+
+3.register command
+    there are two major features you can use in modules: command and messages
+    you can register commands in your MyModule.prep function. notice that there is an argument called register_cmd_callback
+    all you need to do is to call this function to register. for example:
+
+    def someRandomFunction():
+        print("no.")
+    register_cmd_callback("fff", someRandomFunction)
+
+    after doing that you can try type in fff in the gui and hit enter. your function will be called.
+
+    if you do "fff arg1 arg2" and hit enter, your registered function will get one argument which is a list of string:
+
+    ["arg1", "arg2"]
+
+    it is the register function's responsibility to do type cast of input arguments in the list. it should raise no exceptions.
+
+4.receive and send message.
+    to make modules be able to work separately, they do not have direct reference to each other. They communicate with messages.
+
+    check AbstractModule._push_message and AbstractModule._peek_message. These are the methods that we use to send/receive messages.
+
+    You can check the comment in the file MessageBus.py to see the documents for existing messages.
+
+    You can define your own message type and write the definition in this file. But do not edit exising definition written by other people.
+
+
+
+

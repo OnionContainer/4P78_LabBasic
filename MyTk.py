@@ -1,7 +1,7 @@
 import time
 import tkinter as tk
 from typing import List, Tuple
-
+from Configer import configer
 
 """
 
@@ -9,27 +9,39 @@ graphic here, interactive in coordinateDrawer
 
 """
 
-class MyTk(tk.Tk):
-    def __init__(self, width=1000, height=700):
-        super().__init__()
-        print("no?")
-        self.geometry("1000x750+0+0")
 
-        self.title("Arms")
-        self.width = width
-        self.height = height
+
+class MyTk(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        # print("no?")
+        config = configer.get("window_setup")
+
+        self.width = config["width"]
+        self.height = config["height"]
+        self.geometry(f"{self.width}x{self.height + 50}+0+0")
+
+        self.title(config.get("title"))
 
         self.canvas = tk.Canvas(self, width=self.width, height=self.height, bg="white")
-        self.canvas.pack()
+        self.canvas.grid(row=0, column=0)
 
         self.canvas.create_line(self.width // 2, 0, self.width // 2, self.height, fill="black")  # Y-axis
         self.canvas.create_line(0, self.height // 2, self.width, self.height // 2, fill="black")  #
 
         self.entry = tk.Entry(self)
-        self.entry.pack()
+        self.entry.grid(row=1, column=0)
         self.entry.bind("<Return>", self.on_return_key)
+        self.entry.focus_set()
         self.__entry_receiver = lambda x: print(x)
 
+        
+
+        self.__auto_center = config["auto_center"]
+        self.__x_shift = config["x_shift"]
+        self.__y_shift = config["y_shift"]
+        self.__x_scale = config["x_scale"]
+        self.__y_scale = config["y_scale"]
         
         # self.sign_point((-105,115), "origin", "object location", (0,30))
         # # 扇形测试，从 -30° 开始
@@ -37,31 +49,26 @@ class MyTk(tk.Tk):
         # r = 100  # 半径
         # self.canvas.create_arc(x - r, y - r, x + r, y + r,
         #                   start=-30, extent=10, outline="red", width=2)
+
     def rebind_entry_receiver(self, callback):
         self.__entry_receiver = callback
 
     def clear_fans(self):
         self.canvas.delete("fan")
 
-    def draw_fan_contour(self, x, y, radius, start_angle, extent, outline_color, width):
-        """
-        在 Tkinter Canvas 上绘制一个扇形轮廓（无填充，只有边）。
+    def draw_fan_contour(self, x, y, radius, start_angle, extent, outline_color, width, tag="fan"):
 
-        :param x: 圆心的 x 坐标
-        :param y: 圆心的 y 坐标
-        :param radius: 圆的半径
-        :param start_angle: 开始的角度（以度为单位，从3点钟位置逆时针计算）is timed -1 inside this function
-        :param extent: 扇形的角度范围（即绘制多少度）
-        :param outline_color: 轮廓颜色
-        :param width: 轮廓的线宽
-        """
-        # 定义边界框：左上角 (x - r, y - r), 右下角 (x + r, y + r)
         x,y = self.coordinate_centering_filter((x,y))
+
         x0, y0 = x - radius, y - radius
         x1, y1 = x + radius, y + radius
 
-        start_angle *= -1
-        extent *= -1
+
+
+        # start_angle *= -1
+        # extent *= -1
+
+        # print(f"start_angle: {start_angle}, extent: {extent}")
 
         # 使用 create_arc 绘制扇形轮廓
         self.canvas.create_arc(
@@ -71,26 +78,30 @@ class MyTk(tk.Tk):
             outline=outline_color,  # 轮廓颜色
             fill='',  # 无填充
             width=width,# 线宽
-            tags="fan"
+            tags=tag
         )
 
     def coordinate_centering_filter(self, point:Tuple[float,float])->Tuple[float,float]:
 
-        x_shift = self.width // 2.0
-        y_shift = self.height // 2.0
+        if self.__auto_center:
+            __x_shift = self.width // 2.0
+            __y_shift = self.height // 2.0
 
-        return point[0] + x_shift, point[1] + y_shift
+            return point[0] + __x_shift, point[1] + __y_shift
+        else:
+            return point[0]*self.__x_scale + self.__x_shift, point[1]*self.__y_scale + self.__y_shift
 
     def sign_point(self, point, tag="point", message=None, shift=None):
         self.sign_points([point], tag, message, shift)
 
-    def sign_points(self, points: List[Tuple[float, float]], tag="point", message = None, shift=None):
+    def sign_points(self, points: List[Tuple[float, float]], tag="point", message = None, shift=None, width=1.5):
         """
         Draw the given points on the canvas.
         :param points: List of (x, y) tuples representing points to draw
         """
         # Clear the canvas first
         # self.canvas.delete("point")  # Line commented to retain previously drawn points
+        # print(points)
 
         for x, y in points:
             # Store the point data for reference or future use
@@ -119,20 +130,20 @@ class MyTk(tk.Tk):
         # Update the canvas
         self.canvas.update()
 
-    def sign_line(self, point1=(0.0,0.0), point2=(1.0,1.0)):
+    def sign_line(self, point1=(0.0,0.0), point2=(1.0,1.0), width=1.1, fill="red", tag="line"):
         #draw a line from point 1 to point 2
         # self.canvas.delete("line")
         point1 = self.coordinate_centering_filter(point1)
         point2 = self.coordinate_centering_filter(point2)
-        self.canvas.create_line(point1, point2, fill="red", tags="line")
+        self.canvas.create_line(point1, point2, fill=fill, tags=tag, smooth=True, width=width)
         pass
 
-    def clear_canvas(self, tag=None):
-        if tag is not None:
+    def clear_canvas(self, tags=("point", "line")):
+        if type(tags) is str:
+            self.canvas.delete(tags)
+            return
+        for tag in tags:
             self.canvas.delete(tag)
-        else:
-            self.canvas.delete("point")
-            self.canvas.delete("line")
 
     def on_return_key(self, event):
         """

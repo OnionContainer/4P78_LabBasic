@@ -1,23 +1,34 @@
+from ActualArm.ArmControlModule import ArmControlModule
+from Configer import configer
 from time import time
 
 from AbstractModule import AbstractModule
 from ExampleModule import ExampleModule
 from MessageBus import MessageBus
+from MusicPlayer.WavPlayerModule import WavPlayerModule
 from MyTk import MyTk
+from SVG_reading.SVGReaderMod import SVGReaderMod
+from VirtualArm.VirtualArmModule import VirtualArmModule
 
+class LabBasic(AbstractModule):
 
-class LabBasic:
+    def quit(self):
+        pass
 
     def __init__(self):
+        self.__bus = MessageBus()
+        super().__init__(self.__bus)
+
+        # a = {"a": "b"}
+        # p(f"[green]{a}[/green]")
         self.__last_update_time = time()
         self.__modules:[AbstractModule] = []
-        self.__bus = MessageBus()
         self.__command_map = {
             "quit": self.__quit
         }
         self.__raw_command = ""
         self.__window = MyTk()
-        print("??")
+        # print("??")
 
         def update_raw_cmd(cmd):
             if self.__raw_command:
@@ -53,35 +64,43 @@ class LabBasic:
                 self.__command_map[cmd[0]](cmd[1:])
         except TypeError as e:
             print(e)
-
+        except KeyError as e:
+            print(f"[green]{e}[/green]")
 
     def register_command(self):
         pass
 
-    def prep(self):
+    def prep(self, register_cmd_callback=None):
 
         """
         prepare every other modules
         """
 
-        example = ExampleModule()
-        self.__modules.append(example)
+        svg = SVGReaderMod(self.__bus)
+        self.__modules.append(svg)
+        virArm = VirtualArmModule(self.__bus)
+        self.__modules.append(virArm)
+        # control = ArmControlModule(self.__bus)
+        # self.__modules.append(control)
+        player = WavPlayerModule(self.__bus)
+        self.__modules.append(player)
 
-        def register_cmd_callback(key, func):
+
+        def _register_cmd_callback(key, func):
             if self.__command_map.get(key):
                 print(f"command {key} already registered")
                 raise Exception(f"command {key} already registered")
             self.__command_map[key] = func
 
         for m in self.__modules:
-            m.prep(register_cmd_callback)
+            m.prep(_register_cmd_callback)
 
 
         self.update()
         self.__window.mainloop()
         pass
 
-    def update(self):
+    def update(self, dtime=None, bus=None):
         t = time()
         dtime = t - self.__last_update_time
         self.__last_update_time = t
@@ -92,17 +111,44 @@ class LabBasic:
         
         try:
             for m in self.__modules:
-                m.update(dtime, self.__bus)
+                m.update(dtime)
             # self.execute_current_command()
             # map(lambda module: module.update(dtime, self.__bus), self.__modules)
         except Exception as e:
-            print(e)
+            raise e
 
-        self.__window.after(1000, self.update)
+        """
+        messages to be resolved in main level
+        """
+        draw_request = self._peek_message("draw_request")
+        if draw_request is not None:
+            self.__window.clear_canvas("svg_draw")
+            self.__window.sign_points(draw_request["points"], tag="svg_draw", message="")
+
+        arm_render_request = self._peek_message("render_my_arm")
+        if arm_render_request is not None:
+            info = arm_render_request
+            self.__window.clear_canvas("arm_render")
+
+            for l in info["limits"]:
+                self.__window.draw_fan_contour(**l, tag="arm_render")
+            pp = None
+            for p in info["points"]:
+                if pp is None:
+                    pp = p
+                self.__window.sign_line(pp, p, tag="arm_render")
+                pp = p
+            self.__window.sign_points(info["points"], tag="arm_render")
+
+        self.__bus.delete_all_checked_messages()
+        # print(f"message remaining: {self.__bus.get_length()}")
+
+        self.__window.after(10, self.update)
 
         pass
 
 if __name__ == "__main__":
-    print("?")
+    print(configer.get("name"))
+    # print("?")
     lab = LabBasic()
     lab.prep()

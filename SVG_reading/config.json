@@ -1,0 +1,20 @@
+{
+    "name": "Robotics Config File",
+    "version": "1.0",
+    "enabled": false,
+    "interval": 1.0,
+    "window_setup": {
+        "x_shift": 500,
+        "y_shift": 350,
+        "x_scale": 1,
+        "y_scale": -1,
+        "auto_center": false,
+        "width": 1000,
+        "height": 700,
+        "title": "This is Robotics?"
+    },
+    "SVG_reader_setup": {
+        "curve_sample_amount": 10,
+        "default_SVG_file": "shapes.svg"
+    }
+}
