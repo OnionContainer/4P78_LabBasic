@@ -8,6 +8,7 @@ from MusicPlayer.simple_wav_player import PlayerPlayer
     <-msg   actuator_report
     <-cmd   play
 """
+
 class WavPlayerModule(AbstractModule):
 
     def cmd_play(self, args=None):
@@ -16,6 +17,12 @@ class WavPlayerModule(AbstractModule):
     def prep(self, register_cmd_callback):
         self.__player.start()
         register_cmd_callback("play", self.cmd_play)
+        #register_button example
+        self._push_message({
+            "type": "register_button",
+            "text": "play/pause",
+            "callback": self.cmd_play
+        })
         pass
 
     def update(self, dtime: float):

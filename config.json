@@ -4,14 +4,15 @@
     "enabled": false,
     "interval": 1.0,
     "window_setup": {
-        "x_shift": 500,
-        "y_shift": 350,
+        "x_shift": 250,
+        "y_shift": 200,
         "x_scale": 1,
         "y_scale": -1,
         "auto_center": false,
         "width": 1000,
         "height": 700,
-        "title": "This is Robotics?"
+        "title": "This is Robotics?",
+        "canvas_size": [500,400]
     },
     "SVG_reader_setup": {
         "curve_sample_amount": 40,

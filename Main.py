@@ -7,6 +7,7 @@ from ExampleModule import ExampleModule
 from MessageBus import MessageBus
 from MusicPlayer.WavPlayerModule import WavPlayerModule
 from MyTk import MyTk
+from MyTkManager.MyTkManagerModule import MyTkManagerModule
 from SVG_reading.SVGReaderMod import SVGReaderMod
 from VirtualArm.VirtualArmModule import VirtualArmModule
 
@@ -84,6 +85,8 @@ class LabBasic(AbstractModule):
         # self.__modules.append(control)
         player = WavPlayerModule(self.__bus)
         self.__modules.append(player)
+        tk_manager = MyTkManagerModule(self.__bus, self.__window)
+        self.__modules.append(tk_manager)
 
 
         def _register_cmd_callback(key, func):

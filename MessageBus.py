@@ -7,6 +7,20 @@ content: {
     "is_start"(bool): true if actuator starts, false if it stops,
     "key"(data type): description
 }
+
+message: register_button
+content: {
+    "type": "register_button",
+    "text"(str): text you want to display in the button,
+    "callback"(callable): function you want to call when button pressed
+}
+
+message: display_text(not implemented yet)
+content: {
+    "type": "display_text"
+    "text"(str): text you want to display
+    "id"(str): id of text block
+}
 """
 
 class Message:

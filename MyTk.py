@@ -22,12 +22,18 @@ class MyTk(tk.Tk):
         self.geometry(f"{self.width}x{self.height + 50}+0+0")
 
         self.title(config.get("title"))
-
-        self.canvas = tk.Canvas(self, width=self.width, height=self.height, bg="white")
+        
+        canvas_width, canvas_height = config["canvas_size"]
+        self.__canvas_width, self.__canvas_height = canvas_width, canvas_height
+        
+        self.canvas = tk.Canvas(self, width=canvas_width, height=canvas_height, bg="white")
         self.canvas.grid(row=0, column=0)
+        
 
-        self.canvas.create_line(self.width // 2, 0, self.width // 2, self.height, fill="black")  # Y-axis
-        self.canvas.create_line(0, self.height // 2, self.width, self.height // 2, fill="black")  #
+        # self.canvas.create_line(self.width // 2, 0, self.width // 2, self.height, fill="black")  # Y-axis
+        # self.canvas.create_line(0, self.height // 2, self.width, self.height // 2, fill="black")  #
+        self.canvas.create_line(canvas_width // 2, 0, canvas_width // 2, canvas_height, fill="black")  # Y-axis
+        self.canvas.create_line(0, canvas_height // 2, canvas_width, canvas_height // 2, fill="black")  #
 
         self.entry = tk.Entry(self)
         self.entry.grid(row=1, column=0)
@@ -84,8 +90,8 @@ class MyTk(tk.Tk):
     def coordinate_centering_filter(self, point:Tuple[float,float])->Tuple[float,float]:
 
         if self.__auto_center:
-            __x_shift = self.width // 2.0
-            __y_shift = self.height // 2.0
+            __x_shift = self.__canvas_width // 2.0
+            __y_shift = self.__canvas_height // 2.0
 
             return point[0] + __x_shift, point[1] + __y_shift
         else:
