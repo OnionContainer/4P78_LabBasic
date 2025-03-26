@@ -1,0 +1,85 @@
+content,timestamp,tags,level,callstack
+Test3,2025-03-15 13:06:01,"['_2', '_3']",LOG,"  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 143, in <module>
+    est_logger()
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 130, in est_logger
+    logger.write(""Test3"", [""_2"", ""_3""], LogLevel.LOG)
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 62, in write
+    ""callstack"": """".join(traceback.format_stack())
+"
+Test3,2025-03-15 13:06:01,"['_2', '_4']",LOG,"  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 143, in <module>
+    est_logger()
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 131, in est_logger
+    logger.write(""Test3"", [""_2"", ""_4""], LogLevel.LOG)
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 62, in write
+    ""callstack"": """".join(traceback.format_stack())
+"
+Test3,2025-03-15 13:06:01,"['_2', '_5']",LOG,"  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 143, in <module>
+    est_logger()
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 132, in est_logger
+    logger.write(""Test3"", [""_2"", ""_5""], LogLevel.LOG)
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 62, in write
+    ""callstack"": """".join(traceback.format_stack())
+"
+Test2,2025-03-15 13:06:01,"['_2', '_6']",LOG,"  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 143, in <module>
+    est_logger()
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 133, in est_logger
+    logger.write(""Test2"", [""_2"", ""_6""], LogLevel.LOG)
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 62, in write
+    ""callstack"": """".join(traceback.format_stack())
+"
+Test3,2025-03-15 13:06:01,"['_2', '_3']",LOG,"  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 143, in <module>
+    est_logger()
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 130, in est_logger
+    logger.write(""Test3"", [""_2"", ""_3""], LogLevel.LOG)
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 62, in write
+    ""callstack"": """".join(traceback.format_stack())
+"
+Test3,2025-03-15 13:06:01,"['_2', '_4']",LOG,"  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 143, in <module>
+    est_logger()
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 131, in est_logger
+    logger.write(""Test3"", [""_2"", ""_4""], LogLevel.LOG)
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 62, in write
+    ""callstack"": """".join(traceback.format_stack())
+"
+Test3,2025-03-15 13:06:01,"['_2', '_5']",LOG,"  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 143, in <module>
+    est_logger()
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 132, in est_logger
+    logger.write(""Test3"", [""_2"", ""_5""], LogLevel.LOG)
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 62, in write
+    ""callstack"": """".join(traceback.format_stack())
+"
+Test2,2025-03-15 13:06:01,"['_2', '_6']",LOG,"  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 143, in <module>
+    est_logger()
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 133, in est_logger
+    logger.write(""Test2"", [""_2"", ""_6""], LogLevel.LOG)
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 62, in write
+    ""callstack"": """".join(traceback.format_stack())
+"
+Test3,2025-03-15 13:06:02,"['_2', '_3']",LOG,"  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 143, in <module>
+    est_logger()
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 130, in est_logger
+    logger.write(""Test3"", [""_2"", ""_3""], LogLevel.LOG)
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 62, in write
+    ""callstack"": """".join(traceback.format_stack())
+"
+Test3,2025-03-15 13:06:02,"['_2', '_4']",LOG,"  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 143, in <module>
+    est_logger()
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 131, in est_logger
+    logger.write(""Test3"", [""_2"", ""_4""], LogLevel.LOG)
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 62, in write
+    ""callstack"": """".join(traceback.format_stack())
+"
+Test3,2025-03-15 13:06:02,"['_2', '_5']",LOG,"  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 143, in <module>
+    est_logger()
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 132, in est_logger
+    logger.write(""Test3"", [""_2"", ""_5""], LogLevel.LOG)
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 62, in write
+    ""callstack"": """".join(traceback.format_stack())
+"
+Test2,2025-03-15 13:06:02,"['_2', '_6']",LOG,"  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 143, in <module>
+    est_logger()
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 133, in est_logger
+    logger.write(""Test2"", [""_2"", ""_6""], LogLevel.LOG)
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 62, in write
+    ""callstack"": """".join(traceback.format_stack())
+"
