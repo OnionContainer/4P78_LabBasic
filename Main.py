@@ -9,7 +9,10 @@ from MusicPlayer.WavPlayerModule import WavPlayerModule
 from MyTk import MyTk
 from MyTkManager.MyTkManagerModule import MyTkManagerModule
 from SVG_reading.SVGReaderMod import SVGReaderMod
+from Test.TestModule import TestModule
 from VirtualArm.VirtualArmModule import VirtualArmModule
+from GUI.MyQt.MyQtGUI import MyQtGUI
+from GUI.AbstractGUI import AbstractGUI
 
 class LabBasic(AbstractModule):
 
@@ -28,16 +31,11 @@ class LabBasic(AbstractModule):
             "quit": self.__quit
         }
         self.__raw_command = ""
-        self.__window = MyTk()
+        # self.__window:AbstractGUI = MyTk()
+        self.__window:AbstractGUI = MyQtGUI()
         # print("??")
 
-        def update_raw_cmd(cmd):
-            if self.__raw_command:
-                print(f"raw command already exists: {self.__raw_command}")
-                return
-            self.__raw_command = cmd
-            print(f"raw command: {cmd}")
-        self.__window.rebind_entry_receiver(update_raw_cmd)
+
 
         pass
 
@@ -77,16 +75,18 @@ class LabBasic(AbstractModule):
         prepare every other modules
         """
 
-        svg = SVGReaderMod(self.__bus)
-        self.__modules.append(svg)
-        virArm = VirtualArmModule(self.__bus)
-        self.__modules.append(virArm)
+        # svg = SVGReaderMod(self.__bus)
+        # self.__modules.append(svg)
+        # virArm = VirtualArmModule(self.__bus)
+        # self.__modules.append(virArm)
         # control = ArmControlModule(self.__bus)
         # self.__modules.append(control)
         player = WavPlayerModule(self.__bus)
         self.__modules.append(player)
-        tk_manager = MyTkManagerModule(self.__bus, self.__window)
-        self.__modules.append(tk_manager)
+        # tk_manager = MyTkManagerModule(self.__bus, self.__window)
+        # self.__modules.append(tk_manager)
+        test_module = TestModule(self.__bus)
+        self.__modules.append(test_module)
 
 
         def _register_cmd_callback(key, func):
@@ -98,12 +98,20 @@ class LabBasic(AbstractModule):
         for m in self.__modules:
             m.prep(_register_cmd_callback)
 
+        def update_raw_cmd(cmd):
+            if self.__raw_command:
+                print(f"raw command already exists: {self.__raw_command}")
+                return
+            self.__raw_command = cmd
+            print(f"raw command: {cmd}")
+        self.__window.rebind_entry_receiver(update_raw_cmd)
 
         self.update()
-        self.__window.mainloop()
+        self.__window.mainloop(self.update)
         pass
 
     def update(self, dtime=None, bus=None):
+        # print("#############################")
         t = time()
         dtime = t - self.__last_update_time
         self.__last_update_time = t
@@ -125,6 +133,7 @@ class LabBasic(AbstractModule):
         """
         draw_request = self._peek_message("draw_request")
         if draw_request is not None:
+            print("draw request")
             self.__window.clear_canvas("svg_draw")
             self.__window.sign_points(draw_request["points"], tag="svg_draw", message="")
 
@@ -141,12 +150,12 @@ class LabBasic(AbstractModule):
                     pp = p
                 self.__window.sign_line(pp, p, tag="arm_render")
                 pp = p
+
+            # print("points!!!")
             self.__window.sign_points(info["points"], tag="arm_render")
 
         self.__bus.delete_all_checked_messages()
         # print(f"message remaining: {self.__bus.get_length()}")
-
-        self.__window.after(10, self.update)
 
         pass
 

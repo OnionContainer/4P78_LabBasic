@@ -1,8 +1,9 @@
 import time
 import tkinter as tk
-from typing import List, Tuple
+from typing import List, Tuple, final
 from Configer import configer
-
+from MyTkCode.MyTkCanvas import ViewDraggableCanvas
+from GUI import AbstractGUI
 """
 
 graphic here, interactive in coordinateDrawer
@@ -10,10 +11,10 @@ graphic here, interactive in coordinateDrawer
 """
 
 
-
+@final
 class MyTk(tk.Tk):
     def __init__(self):
-        super().__init__()
+        tk.Tk.__init__(self)
         # print("no?")
         config = configer.get("window_setup")
 
@@ -26,8 +27,10 @@ class MyTk(tk.Tk):
         canvas_width, canvas_height = config["canvas_size"]
         self.__canvas_width, self.__canvas_height = canvas_width, canvas_height
         
-        self.canvas = tk.Canvas(self, width=canvas_width, height=canvas_height, bg="white")
+        self.canvas = ViewDraggableCanvas(self, width=canvas_width, height=canvas_height, bg="white")
         self.canvas.grid(row=0, column=0)
+
+
         
 
         # self.canvas.create_line(self.width // 2, 0, self.width // 2, self.height, fill="black")  # Y-axis
