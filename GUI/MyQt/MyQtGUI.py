@@ -1,5 +1,6 @@
 from typing import List, Tuple, Callable
 
+import numpy as np
 from PyQt5.QtGui import QPen, QColor
 
 from GUI.MyQt.MyQtCanvas import MyQtCanvas
@@ -17,7 +18,84 @@ from GUI.MyQt.MyQtTestCanvas import MyQtTestCanvas
 
 class MyQtGUI(AbstractGUI):
 
+    def sign_line_graph(self, data: List[float], position: Tuple[int, int], tag="line_graph"):
+        x_shift = position[0]
+        y_interval = 50.
+        for d in data:
+            # print(d)
+            self.sign_line(
+                (x_shift, position[1]), (x_shift, position[1]-d*y_interval),
+                tag=tag,
+                width=1.5,
+                fill=f"#{hex(min(int(d*1000), 255))[2:]}00{hex(min(int((1-d)*100), 255))[2:]}"
+            )
+
+            x_shift += 0.1
+        pass
+
+    def sign_text(self, text, position, font_size=14, fill="black", tag="text"):
+        x, y = position
+        font = self._canvas.scene().font()
+        font.setPointSize(font_size)
+        text_item = self._canvas.scene().addText(text, font)
+        text_item.setDefaultTextColor(QColor(fill))
+        text_item.setPos(x, y)
+        text_item.setData(0, tag)
+
+    def sign_rect(self, point1, point2, width, fill="black", tag="rect"):
+        x1, y1 = point1
+        x2, y2 = point2
+        rect_x = min(x1, x2)
+        rect_y = min(y1, y2)
+        rect_width = abs(x2 - x1)
+        rect_height = abs(y2 - y1)
+    
+        pen = QPen(QColor(fill))
+        pen.setWidthF(width)
+        brush = QColor(fill)
+    
+        rect = self._canvas.scene().addRect(rect_x, rect_y, rect_width, rect_height, pen)
+        rect.setBrush(brush)
+        rect.setData(0, tag)
+
+    def draw_np_array_as_game_of_life_frame(self, data: np.ndarray, name:str, position:Tuple[int,int]):
+        self.clear_canvas((name,))
+        grid_size = 3.0#hot arg
+        self.sign_rect(
+            (position[0], position[1]),
+            (position[0] + (data.shape[0]-1) * grid_size, position[1] + (data.shape[1]-1) * grid_size),
+            grid_size,
+            "black",
+            name
+        )
+        for i in range(data.shape[0]):
+            for j in range(data.shape[1]):
+                # print(f"Value at position ({i}, {j}): {data[i, j]}")
+                c = data[i,j]
+                if c == 0:
+                    continue
+                x = position[0] + i * grid_size
+                y = position[1] + j * grid_size
+                self.sign_line(
+                    (x, y),
+                    (x + 0.1, y),
+                    grid_size,
+                    "red" if c == 1 else "blue",
+                    name
+                )
+
+    def add_button(self, text, callback):
+        pass
+        print("add button")
+        button = QPushButton(text)
+        button.clicked.connect(callback)
+        print(self._button_layout is None)
+        print(self._order_test)
+        self._button_layout.addWidget(button)
+
     def _prepare_window(self):
+        print("prepare window")
+        self._order_test = "prepare"
         self._app = QApplication(sys.argv)
 
         self._window = QWidget()
@@ -58,14 +136,29 @@ class MyQtGUI(AbstractGUI):
                 """)
 
         # button_layout = QGridLayout()
+        # button_layout = QBoxLayout(QBoxLayout.TopToBottom)
+        # self._button_layout = button_layout
+        # # print(button_layout)
+        # for r in range(1):
+        #     for c in range(2):
+        #         # button_layout.addWidget(self._buttons[r][c], r, c)
+        #         button_layout.addWidget(self._buttons[r][c])
+        #         pass
+        # layout.addLayout(button_layout, 0, 1, 2, 1)  # 按钮列在右侧
+        # self._window.setLayout(layout)
+        # self._window.setLayout(button_layout)  # Ensure that layout is accessible for add_button
+
         button_layout = QBoxLayout(QBoxLayout.TopToBottom)
-        for r in range(4):
+        self._button_layout = button_layout
+        print(self._button_layout)
+        for r in range(1):
             for c in range(2):
                 # button_layout.addWidget(self._buttons[r][c], r, c)
-                button_layout.addWidget(self._buttons[r][c])
+                self._button_layout.addWidget(self._buttons[r][c])
                 pass
-        layout.addLayout(button_layout, 0, 1, 2, 1)  # 按钮列在右侧
+        layout.addLayout(self._button_layout, 0, 1, 2, 1)  # 按钮列在右侧
         self._window.setLayout(layout)
+        self._window.setLayout(self._button_layout)  # Ensure that layout is accessible for add_button
 
         self.sign_line((-180,-180), (-180,280), 3, "red", "coordinate")
         self.sign_line((-180, -180), (280, -180), 3, "red", "coordinate")
@@ -79,6 +172,9 @@ class MyQtGUI(AbstractGUI):
         print(type(self._main_timer.timeout))
         self._main_timer.timeout.connect(update_callback)
         self._main_timer.start(10)
+
+        print("mainloop called")
+        print(self._button_layout)
 
         sys.exit(self._app.exec_())
         pass
@@ -130,15 +226,19 @@ class MyQtGUI(AbstractGUI):
         pass
 
     def __init__(self):
+        print("init my qt gui")
         self._buttons = None
         self._entry:MyQtLineEdit|None = None
         self._canvas:MyQtGView|None = None
         self._main_timer = None
         self._window = None
         self._app = None
+        self._button_layout: QBoxLayout | None = None
+        self._order_test = "init"
         # print("MyQtGUI init")
         super().__init__()
         self._prepare_window()
+        print(self)
     
     def get_canvas_scroll_and_scale(self):
         horizontal_scroll = self._canvas.horizontalScrollBar().value()

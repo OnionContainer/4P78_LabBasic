@@ -4,6 +4,7 @@ from time import time
 
 from AbstractModule import AbstractModule
 from ExampleModule import ExampleModule
+from GUI.GUIModule import GUIModule
 from MessageBus import MessageBus
 from MusicPlayer.WavPlayerModule import WavPlayerModule
 from MyTk import MyTk
@@ -74,7 +75,8 @@ class LabBasic(AbstractModule):
         """
         prepare every other modules
         """
-
+        gui_module = GUIModule(self.__bus, self.__window)
+        self.__modules.append(gui_module)
         # svg = SVGReaderMod(self.__bus)
         # self.__modules.append(svg)
         # virArm = VirtualArmModule(self.__bus)
@@ -87,6 +89,7 @@ class LabBasic(AbstractModule):
         # self.__modules.append(tk_manager)
         test_module = TestModule(self.__bus)
         self.__modules.append(test_module)
+
 
 
         def _register_cmd_callback(key, func):
@@ -106,7 +109,6 @@ class LabBasic(AbstractModule):
             print(f"raw command: {cmd}")
         self.__window.rebind_entry_receiver(update_raw_cmd)
 
-        self.update()
         self.__window.mainloop(self.update)
         pass
 
@@ -154,7 +156,9 @@ class LabBasic(AbstractModule):
             # print("points!!!")
             self.__window.sign_points(info["points"], tag="arm_render")
 
+        # print(self.__bus.get_length())
         self.__bus.delete_all_checked_messages()
+        # print(self.__bus.get_length())
         # print(f"message remaining: {self.__bus.get_length()}")
 
         pass

@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import List
 
 from MessageBus import MessageBus
 
@@ -12,18 +13,22 @@ class AbstractModule(ABC):
     def _push_message(self, msg):
         self.__bus.push_message(self, msg)
 
-    def _peek_message(self, key, auto_check=True)->None|dict:
+    def _peek_message(self, key, auto_check=True)->None|List[dict]:
         """
         :param key: the type of message you look for
         :return: the message content
         """
+        result = []
         for msg in self.__bus.iterate_messages():
             info = msg.get_info()
             if info["type"] == key:
                 if auto_check:
                     msg.set_checked()
-                return info
-        return None
+                result.append(info)
+                # return info
+        if len(result) == 0:
+            return None
+        return result
 
     @abstractmethod
     def prep(self, register_cmd_callback):

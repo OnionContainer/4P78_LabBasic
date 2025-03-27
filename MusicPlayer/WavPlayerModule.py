@@ -18,11 +18,13 @@ class WavPlayerModule(AbstractModule):
         self.__player.start()
         register_cmd_callback("play", self.cmd_play)
         #register_button example
-        self._push_message({
-            "type": "register_button",
-            "text": "play/pause",
-            "callback": self.cmd_play
-        })
+        for i in range(1):
+            self._push_message({
+                "type": "register_button",
+                "text": "play/pause",
+                "callback": self.cmd_play
+            })
+
         pass
 
     def update(self, dtime: float):

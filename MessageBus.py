@@ -33,6 +33,9 @@ class Message:
         self.__info = the message, in key-value form
         """
 
+    def print(self):
+        print(f"publisher: {self.__publisher}, info: {self.__info}")
+
     def is_read(self):
         return self.__is_checked
 

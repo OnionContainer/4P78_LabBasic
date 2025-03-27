@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Tuple, List, Callable
+import numpy as np
 
 
 class AbstractGUI(ABC):
@@ -8,11 +9,31 @@ class AbstractGUI(ABC):
         pass
 
     @abstractmethod
+    def sign_line_graph(self, data:List[float], position:Tuple[int,int], tag="line_graph"):
+        pass
+
+    @abstractmethod
+    def sign_text(self, text, position, font_size=14, fill="black", tag="text"):
+        pass
+
+    @abstractmethod
+    def draw_np_array_as_game_of_life_frame(self, data: np.ndarray, name:str, position:Tuple[int,int]):
+        pass
+
+    @abstractmethod
+    def add_button(self, text, callback):
+        pass
+
+    @abstractmethod
     def mainloop(self, update_callback:Callable[[], None]):
         pass
 
     @abstractmethod
     def rebind_entry_receiver(self, callback):
+        pass
+
+    @abstractmethod
+    def sign_rect(self, point1, point2, width, fill, tag="rect"):
         pass
 
     @abstractmethod
