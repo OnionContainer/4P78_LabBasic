@@ -1,0 +1,4 @@
+content,timestamp,tags,level,callstack
+Something,PLACEHOLDER,['_example'],LOG,PLACEHOLDER
+80,PLACEHOLDER,['game_width'],LOG,PLACEHOLDER
+80,PLACEHOLDER,['game_height'],LOG,PLACEHOLDER
