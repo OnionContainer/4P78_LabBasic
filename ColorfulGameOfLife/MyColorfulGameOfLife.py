@@ -31,8 +31,8 @@ class MyColorfulGameOfLife(AbstractColorfulGameOfLife):
                         0,
                         self._rule_set.get_cell_types_length() + 1,
                         size=(
-                            int(Logger.i().read_hot_argument("game_width")),
-                            int(Logger.i().read_hot_argument("game_height"))
+                            int(Logger.i().read_hot_argument("game_width", 50)),
+                            int(Logger.i().read_hot_argument("game_height", 60))
                         ),
                         dtype=int32)
                 )

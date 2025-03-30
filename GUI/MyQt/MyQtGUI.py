@@ -32,7 +32,7 @@ class MyQtGUI(AbstractGUI):
             x_shift += 0.1
         pass
 
-    def sign_text(self, text, position, font_size=14, fill="black", tag="text"):
+    def sign_text(self, text:str, position:Tuple[int,int], font_size:int=14, fill="black", tag="text"):
         x, y = position
         font = self._canvas.scene().font()
         font.setPointSize(font_size)

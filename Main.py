@@ -77,8 +77,8 @@ class LabBasic(AbstractModule):
         """
         gui_module = GUIModule(self.__bus, self.__window)
         self.__modules.append(gui_module)
-        # svg = SVGReaderMod(self.__bus)
-        # self.__modules.append(svg)
+        svg = SVGReaderMod(self.__bus)
+        self.__modules.append(svg)
         # virArm = VirtualArmModule(self.__bus)
         # self.__modules.append(virArm)
         # control = ArmControlModule(self.__bus)
@@ -135,9 +135,21 @@ class LabBasic(AbstractModule):
         """
         draw_request = self._peek_message("draw_request")
         if draw_request is not None:
-            print("draw request")
-            self.__window.clear_canvas("svg_draw")
-            self.__window.sign_points(draw_request["points"], tag="svg_draw", message="")
+            for request in draw_request:
+                self.__window.clear_canvas("svg_draw")
+                self.__window.sign_points(request["points"], tag="svg_draw", message="")
+
+        text_request = self._peek_message("display_text")
+        if text_request is not None:
+            for request in text_request:
+                self.__window.clear_canvas(request['id'])
+                self.__window.sign_text(
+                    request['text'],
+                    request['position'],
+                    font_size=4,
+                    tag = request['id']
+                )
+
 
         arm_render_request = self._peek_message("render_my_arm")
         if arm_render_request is not None:

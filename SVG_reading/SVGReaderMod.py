@@ -1,4 +1,5 @@
 from AbstractModule import AbstractModule
+from Logger.Logger import hot
 from MessageBus import MessageBus
 from Configer import configer
 from SVG_reading.read_Image import drawSVG
@@ -54,8 +55,6 @@ class SVGReaderMod(AbstractModule):
             print(f"{e}")
         pass
 
-    def function_to_call(self):
-        print("function called")
 
     def prep(self, register_cmd_callback):
         self.__reader = drawSVG(self.__data["default_SVG_file"], is_quiet=True)
@@ -66,11 +65,18 @@ class SVGReaderMod(AbstractModule):
         register_cmd_callback("plan", self.cmd_generate_rotation_plan)
         register_cmd_callback("bset", self.cmd_bulk_set)
 
-        register_cmd_callback(
-            "hello",
-            self.function_to_call
-        )
 
+        step = int(hot("svg_measure_step", 10))
+        for x in range(int(hot("svg_measure_x", 10))):
+            for y in range(int(hot("svg_measure_y", 10))):
+                if x != 0 and y != 0:
+                    continue
+                self._push_message({
+                    "type": "display_text",
+                    "text": f"{max(x,y)*step}",
+                    "position": (x*step, y*step),
+                    "id": f"measure{x}{y}"
+                })
 
         pass
 
@@ -127,8 +133,4 @@ class SVGReaderMod(AbstractModule):
 
     def quit(self):
         pass
-
-if __name__ == "__main__":
-    mod = SVGReaderMod()
-    mod.prep(lambda x,y: print(x,y))
 

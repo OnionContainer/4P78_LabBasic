@@ -27,7 +27,7 @@ import pandas
 import pandas as pd
 import ast
 
-def hot(tag:str, default = "PLACEHOLDER"):
+def hot(tag:str, default):
     return Logger.i().read_hot_argument(tag, default)
 
 __Logger_Configer = {
@@ -103,8 +103,9 @@ class Logger:
         if self.AUTO_SAVE:
             self.save()
 
-    def read_hot_argument(self, tag:str, default = "PLACEHOLDER"):
+    def read_hot_argument(self, tag:str, default):
         """
+        :param default:
         :param tag: the argument name to load
         :return: the string value of the argument
         """

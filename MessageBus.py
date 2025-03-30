@@ -17,9 +17,10 @@ content: {
 
 message: display_text(not implemented yet)
 content: {
-    "type": "display_text"
-    "text"(str): text you want to display
-    "id"(str): id of text block
+    "type": "display_text",
+    "position"(tuple): position of text block,
+    "text"(str): text you want to display,
+    "id"(str): id of text block,
 }
 """
 

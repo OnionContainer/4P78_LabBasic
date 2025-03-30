@@ -15,6 +15,7 @@ class AbstractModule(ABC):
 
     def _peek_message(self, key, auto_check=True)->None|List[dict]:
         """
+        Change Reminder: if you see and bug about this interface, we changed from return one thing to return everything
         :param key: the type of message you look for
         :return: the message content
         """

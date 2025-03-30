@@ -13,3 +13,36 @@ Money,29/3/2025 15:31,name,HOT_ARGUMENT,"  File ""D:\work\2024Winter\C478\LabBas
   File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 131, in read_hot_argument
     ""callstack"": """".join(traceback.format_stack())
 "
+15,30/3/2025 16:29,svg_measure_step,HOT_ARGUMENT,"  File ""D:\work\2024Winter\C478\LabBasic2\Main.py"", line 185, in <module>
+    lab.prep()
+  File ""D:\work\2024Winter\C478\LabBasic2\Main.py"", line 102, in prep
+    m.prep(_register_cmd_callback)
+  File ""D:\work\2024Winter\C478\LabBasic2\SVG_reading\SVGReaderMod.py"", line 69, in prep
+    step = int(hot(""svg_measure_step"", 10))
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 31, in hot
+    return Logger.i().read_hot_argument(tag, default)
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 132, in read_hot_argument
+    ""callstack"": """".join(traceback.format_stack())
+"
+10,30/3/2025 16:29,svg_measure_x,HOT_ARGUMENT,"  File ""D:\work\2024Winter\C478\LabBasic2\Main.py"", line 185, in <module>
+    lab.prep()
+  File ""D:\work\2024Winter\C478\LabBasic2\Main.py"", line 102, in prep
+    m.prep(_register_cmd_callback)
+  File ""D:\work\2024Winter\C478\LabBasic2\SVG_reading\SVGReaderMod.py"", line 70, in prep
+    for x in range(int(hot(""svg_measure_x"", 10))):
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 31, in hot
+    return Logger.i().read_hot_argument(tag, default)
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 132, in read_hot_argument
+    ""callstack"": """".join(traceback.format_stack())
+"
+10,30/3/2025 16:29,svg_measure_y,HOT_ARGUMENT,"  File ""D:\work\2024Winter\C478\LabBasic2\Main.py"", line 185, in <module>
+    lab.prep()
+  File ""D:\work\2024Winter\C478\LabBasic2\Main.py"", line 102, in prep
+    m.prep(_register_cmd_callback)
+  File ""D:\work\2024Winter\C478\LabBasic2\SVG_reading\SVGReaderMod.py"", line 71, in prep
+    for y in range(int(hot(""svg_measure_y"", 10))):
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 31, in hot
+    return Logger.i().read_hot_argument(tag, default)
+  File ""D:\work\2024Winter\C478\LabBasic2\Logger\Logger.py"", line 132, in read_hot_argument
+    ""callstack"": """".join(traceback.format_stack())
+"
