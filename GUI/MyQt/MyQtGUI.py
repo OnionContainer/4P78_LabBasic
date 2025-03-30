@@ -22,7 +22,6 @@ class MyQtGUI(AbstractGUI):
         x_shift = position[0]
         y_interval = 50.
         for d in data:
-            # print(d)
             self.sign_line(
                 (x_shift, position[1]), (x_shift, position[1]-d*y_interval),
                 tag=tag,
@@ -70,7 +69,6 @@ class MyQtGUI(AbstractGUI):
         )
         for i in range(data.shape[0]):
             for j in range(data.shape[1]):
-                # print(f"Value at position ({i}, {j}): {data[i, j]}")
                 c = data[i,j]
                 if c == 0:
                     continue
@@ -86,11 +84,8 @@ class MyQtGUI(AbstractGUI):
 
     def add_button(self, text, callback):
         pass
-        print("add button")
         button = QPushButton(text)
         button.clicked.connect(callback)
-        print(self._button_layout is None)
-        print(self._order_test)
         self._button_layout.addWidget(button)
 
     def _prepare_window(self):
@@ -135,22 +130,8 @@ class MyQtGUI(AbstractGUI):
                     font-size: 14px;
                 """)
 
-        # button_layout = QGridLayout()
-        # button_layout = QBoxLayout(QBoxLayout.TopToBottom)
-        # self._button_layout = button_layout
-        # # print(button_layout)
-        # for r in range(1):
-        #     for c in range(2):
-        #         # button_layout.addWidget(self._buttons[r][c], r, c)
-        #         button_layout.addWidget(self._buttons[r][c])
-        #         pass
-        # layout.addLayout(button_layout, 0, 1, 2, 1)  # 按钮列在右侧
-        # self._window.setLayout(layout)
-        # self._window.setLayout(button_layout)  # Ensure that layout is accessible for add_button
-
         button_layout = QBoxLayout(QBoxLayout.TopToBottom)
         self._button_layout = button_layout
-        print(self._button_layout)
         for r in range(1):
             for c in range(2):
                 # button_layout.addWidget(self._buttons[r][c], r, c)
@@ -169,12 +150,9 @@ class MyQtGUI(AbstractGUI):
     def mainloop(self, update_callback: Callable[[], None]):
         self._main_timer = QTimer()
         # self._timer.timeout.connect(rrr)
-        print(type(self._main_timer.timeout))
         self._main_timer.timeout.connect(update_callback)
         self._main_timer.start(10)
 
-        print("mainloop called")
-        print(self._button_layout)
 
         sys.exit(self._app.exec_())
         pass
@@ -211,10 +189,6 @@ class MyQtGUI(AbstractGUI):
         line.setData(0, tag)
 
     def clear_canvas(self, tags=("point", "line")):
-        # if True:
-        #     return
-        # print(self.get_canvas_scroll_and_scale())
-        # Iterate over all items in the canvas scene
         if type(tags) is str:
             tags = (tags,)
         for item in self._canvas.scene().items():
@@ -235,10 +209,8 @@ class MyQtGUI(AbstractGUI):
         self._app = None
         self._button_layout: QBoxLayout | None = None
         self._order_test = "init"
-        # print("MyQtGUI init")
         super().__init__()
         self._prepare_window()
-        print(self)
     
     def get_canvas_scroll_and_scale(self):
         horizontal_scroll = self._canvas.horizontalScrollBar().value()

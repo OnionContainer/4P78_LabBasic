@@ -6,12 +6,13 @@ from MyTk import MyTk
 from MessageBus import MessageBus
 import tkinter as tk
 import numpy as np
+from Logger.Logger import Logger, hot
 
 
 class GUIModule(AbstractModule):
 
     def on_register_button(self, info:dict):
-        print(f"register button: {info}")
+        # print(f"register button: {info}")
         self.__gui_object.add_button(
             info.get("text", "Default Text"),
             info.get("callback", lambda: print("click button"))
@@ -26,6 +27,9 @@ class GUIModule(AbstractModule):
                 (0,0)
             )
             print("draw frame")
+
+        print(hot("name", "Cash"))
+
 
         register_cmd_callback("drf", cmd_draw_frame)
 

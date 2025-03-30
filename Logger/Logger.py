@@ -22,8 +22,13 @@ from datetime import datetime
 from enum import Enum
 import traceback
 from typing import List
+
+import pandas
 import pandas as pd
 import ast
+
+def hot(tag:str, default = "PLACEHOLDER"):
+    return Logger.i().read_hot_argument(tag, default)
 
 __Logger_Configer = {
     "HotArguments_Directory": "HotArguments",
@@ -98,7 +103,7 @@ class Logger:
         if self.AUTO_SAVE:
             self.save()
 
-    def read_hot_argument(self, tag:str):
+    def read_hot_argument(self, tag:str, default = "PLACEHOLDER"):
         """
         :param tag: the argument name to load
         :return: the string value of the argument
@@ -112,8 +117,22 @@ class Logger:
             self._rebind_reference()
 
         result = self.read(tag, LogLevel.HOT_ARGUMENT)
-        if len(result) != 1:
+        if len(result) > 1:
             raise Exception(f"HotArgument {tag} found {len(result)} values, expected 1.")
+        if len(result) == 0:
+            """
+            add a line to the current hot argument dataframe, store the key and default value. call save_dataframe_as to save it, and return default value.
+            """
+            new_row = pd.DataFrame([{
+                "content": default,
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "tags": [tag],
+                "level": LogLevel.HOT_ARGUMENT.name,
+                "callstack": "".join(traceback.format_stack())
+            }])
+            self.hot_arguments = pd.concat([self.hot_arguments, new_row], ignore_index=True)
+            self.save_dataframe_as(self.hot_arguments, "HotArguments")
+            return default
         return result[0]
         pass
 
@@ -140,6 +159,15 @@ class Logger:
         if df.empty:
             return None
         return df.iloc[0]
+
+    def save_dataframe_as(self, df:pandas.DataFrame, file_name:str):
+        file_name = 'data/' + file_name + '.csv'
+    
+        try:
+            df['tags'] = df['tags'].apply(lambda x: ",".join(x))
+            df.to_csv(file_name, index=False)
+        except FileNotFoundError:
+            print(f"Directory for {file_name} not found. Please create the required directory.")
 
 
     def save(self):
@@ -172,7 +200,10 @@ class Logger:
 
         # 将 tags 列的字符串转换为列表
         # print(df["tags"])
-        df['tags'] = df['tags'].apply(lambda x: ast.literal_eval(x))
+        df['tags'] = df['tags'].apply(lambda x: x.split(","))
+        # df['tags'] = df['tags'].apply(lambda x: [x] if type(x) is str else x)
+        # df['tags'] = df['tags'].apply(lambda x: [x] if isinstance(x, str) else ast.literal_eval(x))
+        print(df.head(5))
         return df
 ###
 

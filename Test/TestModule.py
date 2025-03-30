@@ -15,9 +15,6 @@ class TestModule(AbstractModule):
     def prep(self, register_cmd_callback):
         print("Test Module")
         a = Logger.i().read_hot_argument("_example")
-        print(a)
-        print(type(a))
-        print(set(a))
 
         def on_press():
             print(Logger.i().read_hot_argument("_example"))
