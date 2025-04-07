@@ -26,6 +26,12 @@ class ERegisterButton(EventData):
     button_text: str
     button_function: Callable[[], None]
 
+@dataclass
+class EyeData(EventData):
+    eye_state: int
+    eye_x: int
+    eye_y: int
+
 class SignalType(Enum):
     """
     An enumeration of signal types for the event system.
@@ -36,6 +42,7 @@ class SignalType(Enum):
     """
     REGISTER_BUTTON = auto()
     DISPLAY_TEXT = auto()
+    EYE_DATA = auto()
 
 EventDataChild = TypeVar("EventDataChild", bound=EventData)
 

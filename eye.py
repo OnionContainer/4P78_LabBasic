@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from EventCenter import emit, SignalType, EyeData
 
 class EyeDetection:
 
@@ -61,6 +62,8 @@ class EyeDetection:
                 eye_state = 1  # Half open
             elif cv2.contourArea(contour) <= 6000:
                 eye_state = 2  # Closed
+            
+            emit(SignalType.EYE_DATA, EyeData(eye_x = eye_x, eye_y = eye_y, eye_state = eye_state))
 
         #cv2.imshow("Eye Detection", cropped)
 
