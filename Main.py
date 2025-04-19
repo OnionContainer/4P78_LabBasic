@@ -33,7 +33,7 @@ class LabBasic(AbstractModule):
         }
         self.__raw_command = ""
         # self.__window:AbstractGUI = MyTk()
-        self.__window:AbstractGUI = MyQtGUI()
+        self.__window:MyQtGUI = MyQtGUI()
         # print("??")
 
 
@@ -77,8 +77,8 @@ class LabBasic(AbstractModule):
         """
         gui_module = GUIModule(self.__bus, self.__window)
         self.__modules.append(gui_module)
-        svg = SVGReaderMod(self.__bus)
-        self.__modules.append(svg)
+        # svg = SVGReaderMod(self.__bus)
+        # self.__modules.append(svg)
         # virArm = VirtualArmModule(self.__bus)
         # self.__modules.append(virArm)
         # control = ArmControlModule(self.__bus)

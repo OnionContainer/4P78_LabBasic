@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Callable, TypeVar
 from enum import Enum, auto
-import this
+# import this
 
 from blinker import signal
 
@@ -120,3 +120,5 @@ def on(signal_name: SignalType, callback: Callable[[EventDataChild], None]):
         callback (Callable): The function to execute when the signal is emitted.
     """
     ec.on(signal_name, callback)
+
+

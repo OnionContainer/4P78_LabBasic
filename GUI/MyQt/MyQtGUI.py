@@ -3,6 +3,7 @@ from typing import List, Tuple, Callable
 import numpy as np
 from PyQt5.QtGui import QPen, QColor
 
+from GUI.MyQt.BasicRenderFunctions import BasicRenderFunctions
 from GUI.MyQt.MyQtCanvas import MyQtCanvas
 
 from GUI.AbstractGUI import AbstractGUI
@@ -14,15 +15,78 @@ from PyQt5.QtCore import QTimer
 from GUI.MyQt.MyQtGView import MyQtGView
 from GUI.MyQt.MyQtLineEdit import MyQtLineEdit
 from GUI.MyQt.MyQtTestCanvas import MyQtTestCanvas
+from GUI.MyQt.MyQtTextColBoxLayout import MyQtTextColBoxLayout, say
 
 
-class MyQtGUI(AbstractGUI):
+class MyQtGUI:
+
+
+
+    def get_life_game_renderer(self, cell_color_dict: dict, game_size: Tuple[int, int],
+                               display_position: Tuple[float, float] = (0, 0)):
+        #initialize the frame
+        print("???")
+        grid_size = 3.0#hot
+        cell_collection = []
+        pen_dict = {}
+        default_pen = QPen(QColor("white"))
+        for key, value in cell_color_dict.items():
+            p = QPen(QColor(value))
+            p.setWidthF(grid_size)
+            pen_dict[key] = p
+
+        for x in range(game_size[0]):
+            cell_layer = []
+            for y in range(game_size[1]):
+                pos_x = x * grid_size + display_position[0]
+                pos_y = y * grid_size + display_position[1]
+                cell = self.basic_render_functions.sign_line(
+                    (pos_x, pos_y),
+                    (pos_x + 0.1, pos_y),
+                    grid_size,#stroke width
+                    "black",#color
+                    "cell"
+                )
+                cell_layer.append(cell)
+                # cell_bucket = {}
+                # for key, value in cell_color_dict.items():
+                #     pos_x = x * grid_size + display_position[0]
+                #     pos_y = y * grid_size + display_position[1]
+                #     cell = self.basic_render_functions.sign_line(
+                #         (pos_x, pos_y),
+                #         (pos_x + 0.1, pos_y),
+                #         grid_size,#stroke width
+                #         value,#color
+                #         "cell"
+                #     )
+                #     cell_bucket[key] = cell
+                #     cell.setVisible(False)
+                # cell_layer.append(cell_bucket)
+            cell_collection.append(cell_layer)
+
+        def render(frame: np.ndarray):
+            #render the frame
+            for x0 in range(game_size[0]):
+                for y0 in range(game_size[1]):
+
+                    cell_collection[x0][y0].setPen(
+                        pen_dict.get(frame[x0, y0],default_pen)
+                    )
+                    # for key0, cell0 in cell_collection[x0][y0].items():
+                    #     if key0 == frame_value:
+                    #         cell0.setVisible(True)
+                    #     else:
+                    #         cell0.setVisible(False)
+            pass
+
+        return render
+        pass
 
     def sign_line_graph(self, data: List[float], position: Tuple[int, int], tag="line_graph"):
         x_shift = position[0]
         y_interval = 50.
         for d in data:
-            self.sign_line(
+            self.basic_render_functions.sign_line(
                 (x_shift, position[1]), (x_shift, position[1]-d*y_interval),
                 tag=tag,
                 width=1.5,
@@ -32,55 +96,33 @@ class MyQtGUI(AbstractGUI):
             x_shift += 0.1
         pass
 
-    def sign_text(self, text:str, position:Tuple[int,int], font_size:int=14, fill="black", tag="text"):
-        x, y = position
-        font = self._canvas.scene().font()
-        font.setPointSize(font_size)
-        text_item = self._canvas.scene().addText(text, font)
-        text_item.setDefaultTextColor(QColor(fill))
-        text_item.setPos(x, y)
-        text_item.setData(0, tag)
 
-    def sign_rect(self, point1, point2, width, fill="black", tag="rect"):
-        x1, y1 = point1
-        x2, y2 = point2
-        rect_x = min(x1, x2)
-        rect_y = min(y1, y2)
-        rect_width = abs(x2 - x1)
-        rect_height = abs(y2 - y1)
-    
-        pen = QPen(QColor(fill))
-        pen.setWidthF(width)
-        brush = QColor(fill)
-    
-        rect = self._canvas.scene().addRect(rect_x, rect_y, rect_width, rect_height, pen)
-        rect.setBrush(brush)
-        rect.setData(0, tag)
-
-    def draw_np_array_as_game_of_life_frame(self, data: np.ndarray, name:str, position:Tuple[int,int]):
-        self.clear_canvas((name,))
-        grid_size = 3.0#hot arg
-        self.sign_rect(
-            (position[0], position[1]),
-            (position[0] + (data.shape[0]-1) * grid_size, position[1] + (data.shape[1]-1) * grid_size),
-            grid_size,
-            "black",
-            name
-        )
-        for i in range(data.shape[0]):
-            for j in range(data.shape[1]):
-                c = data[i,j]
-                if c == 0:
-                    continue
-                x = position[0] + i * grid_size
-                y = position[1] + j * grid_size
-                self.sign_line(
-                    (x, y),
-                    (x + 0.1, y),
-                    grid_size,
-                    "red" if c == 1 else "blue",
-                    name
-                )
+    # Archived Method
+    #
+    # def draw_np_array_as_game_of_life_frame(self, data: np.ndarray, name:str, position:Tuple[int,int]):
+    #     self.basic_render_functions.clear_canvas((name,))
+    #     grid_size = 3.0#hot arg
+    #     self.basic_render_functions.sign_rect(
+    #         (position[0], position[1]),
+    #         (position[0] + (data.shape[0]-1) * grid_size, position[1] + (data.shape[1]-1) * grid_size),
+    #         grid_size,
+    #         "black",
+    #         name
+    #     )
+    #     for i in range(data.shape[0]):
+    #         for j in range(data.shape[1]):
+    #             c = data[i,j]
+    #             if c == 0:
+    #                 continue
+    #             x = position[0] + i * grid_size
+    #             y = position[1] + j * grid_size
+    #             self.basic_render_functions.sign_line(
+    #                 (x, y),
+    #                 (x + 0.1, y),
+    #                 grid_size,
+    #                 "red" if c == 1 else "blue",
+    #                 name
+    #             )
 
     def add_button(self, text, callback):
         pass
@@ -94,7 +136,7 @@ class MyQtGUI(AbstractGUI):
         self._app = QApplication(sys.argv)
 
         self._window = QWidget()
-        self._window.resize(800, 600)
+        self._window.resize(1600, 600)
         self._window.setWindowTitle("My GUI")
         self._window.show()
 
@@ -138,66 +180,36 @@ class MyQtGUI(AbstractGUI):
                 self._button_layout.addWidget(self._buttons[r][c])
                 pass
         layout.addLayout(self._button_layout, 0, 1, 2, 1)  # 按钮列在右侧
+
+        text_layout = MyQtTextColBoxLayout()
+        layout.addLayout(text_layout, 0, 2, 2, 1)
+
         self._window.setLayout(layout)
         self._window.setLayout(self._button_layout)  # Ensure that layout is accessible for add_button
 
-        self.sign_line((-180,-180), (-180,280), 3, "red", "coordinate")
-        self.sign_line((-180, -180), (280, -180), 3, "red", "coordinate")
-        self.sign_line((280, -180), (280, 280), 3, "red", "coordinate")
-        self.sign_line((-180, 280), (280, 280), 3, "red", "coordinate")
+        say("Hello", "This column is to display messages")
         pass
 
     def mainloop(self, update_callback: Callable[[], None]):
         self._main_timer = QTimer()
         # self._timer.timeout.connect(rrr)
         self._main_timer.timeout.connect(update_callback)
-        self._main_timer.start(10)
-
-
+        self._main_timer.start(25)
         sys.exit(self._app.exec_())
         pass
 
     def rebind_entry_receiver(self, callback):
         self._entry.rebind_enter_callback(callback)
 
-    def clear_fans(self):
-        pass
-
-    def draw_fan_contour(self, x, y, radius, start_angle, extent, outline_color, width, tag="fan"):
-        pass
-
-    def coordinate_centering_filter(self, point: Tuple[float, float]) -> Tuple[float, float]:
-        pass
-
-    def sign_point(self, point, tag="point", message=None, shift=None):
-        print(f"\n\n\n\nsign_point: {point}\n\n\n\n")
-        pass
-
-    def sign_points(self, points: List[Tuple[float, float]], tag="point", message=None, shift=None, width=3.5):
-        # Iterate over all points in the list and plot them using self._canvas
-        for x, y in points:
-            # Assuming self._canvas has a method to draw or mark points, 
-            # replace 'draw_point' with the correct method name if necessary
-            point = self._canvas.scene().addEllipse(x - width / 2, y - width / 2, width, width)
-            point.setData(0, tag)
 
 
-    def sign_line(self, point1=(0.0, 0.0), point2=(1.0, 1.0), width=1.1, fill="red", tag="line"):
-        pen = QPen(QColor(fill))
-        pen.setWidthF(width)
-        line = self._canvas.scene().addLine(point1[0], point1[1], point2[0], point2[1], pen)
-        line.setData(0, tag)
 
-    def clear_canvas(self, tags=("point", "line")):
-        if type(tags) is str:
-            tags = (tags,)
-        for item in self._canvas.scene().items():
-            # Check if the item contains any of the matching tags
-            if item.data(0) in tags:
-                self._canvas.scene().removeItem(item)
 
-    def on_return_key(self, event):
-        pass
+
+
+
+
+
 
     def __init__(self):
         print("init my qt gui")
@@ -209,13 +221,10 @@ class MyQtGUI(AbstractGUI):
         self._app = None
         self._button_layout: QBoxLayout | None = None
         self._order_test = "init"
-        super().__init__()
         self._prepare_window()
+
+        self.basic_render_functions = BasicRenderFunctions(self._canvas)
     
-    def get_canvas_scroll_and_scale(self):
-        horizontal_scroll = self._canvas.horizontalScrollBar().value()
-        vertical_scroll = self._canvas.verticalScrollBar().value()
-        scale = self._canvas.transform().m11()  # Assuming uniform scaling
-        return {"horizontal_scroll": horizontal_scroll, "vertical_scroll": vertical_scroll, "scale": scale}
+
 
 

@@ -17,6 +17,10 @@ class AbstractGUI(ABC):
         pass
 
     @abstractmethod
+    def get_life_game_renderer(self, cell_color_dict:dict, game_size:Tuple[int,int], display_position:Tuple[float, float] = (0,0)):
+        pass
+
+    @abstractmethod
     def draw_np_array_as_game_of_life_frame(self, data: np.ndarray, name:str, position:Tuple[int,int]):
         pass
 
@@ -54,6 +58,10 @@ class AbstractGUI(ABC):
 
     @abstractmethod
     def sign_points(self, points: List[Tuple[float, float]], tag="point", message=None, shift=None, width=1.5):
+        pass
+
+    @abstractmethod
+    def report_canvas_status(self):
         pass
 
     @abstractmethod

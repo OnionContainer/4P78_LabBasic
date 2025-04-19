@@ -72,7 +72,7 @@ class EyeDetection:
         return True  #Return True if there was a frame
 
 if __name__ == "__main__":
-    
+    print("2")
     eye_detection = EyeDetection("IMG_9828.MOV")
     if not eye_detection.process_frame():
         print("NO FRAMES ):")
