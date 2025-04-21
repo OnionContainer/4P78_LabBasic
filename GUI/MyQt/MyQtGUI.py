@@ -1,5 +1,5 @@
 from typing import List, Tuple, Callable
-
+import time
 import numpy as np
 from PyQt5.QtGui import QPen, QColor
 
@@ -16,24 +16,27 @@ from GUI.MyQt.MyQtGView import MyQtGView
 from GUI.MyQt.MyQtLineEdit import MyQtLineEdit
 from GUI.MyQt.MyQtTestCanvas import MyQtTestCanvas
 from GUI.MyQt.MyQtTextColBoxLayout import MyQtTextColBoxLayout, say
-
+import pyqtgraph as pg
 
 class MyQtGUI:
 
+    def get_life_game_renderer_alt(self, cell_color_dict: dict, game_size: Tuple[int, int], display_position: Tuple[float, float] = (0, 0)):
+
+        pass
 
 
-    def get_life_game_renderer(self, cell_color_dict: dict, game_size: Tuple[int, int],
-                               display_position: Tuple[float, float] = (0, 0)):
+    def get_life_game_renderer(self, cell_color_dict: dict, game_size: Tuple[int, int], display_position: Tuple[float, float] = (0, 0)):
         #initialize the frame
-        print("???")
         grid_size = 3.0#hot
         cell_collection = []
         pen_dict = {}
         default_pen = QPen(QColor("white"))
+        tag = f"{time.time():.4f}tag"
         for key, value in cell_color_dict.items():
             p = QPen(QColor(value))
             p.setWidthF(grid_size)
             pen_dict[key] = p
+
 
         for x in range(game_size[0]):
             cell_layer = []
@@ -45,7 +48,7 @@ class MyQtGUI:
                     (pos_x + 0.1, pos_y),
                     grid_size,#stroke width
                     "black",#color
-                    "cell"
+                    tag = tag
                 )
                 cell_layer.append(cell)
                 # cell_bucket = {}
@@ -64,7 +67,11 @@ class MyQtGUI:
                 # cell_layer.append(cell_bucket)
             cell_collection.append(cell_layer)
 
-        def render(frame: np.ndarray):
+        def render(frame: np.ndarray, destroy = False):
+            if destroy:
+                self.basic_render_functions.clear_canvas((tag,))
+                return
+                pass
             #render the frame
             for x0 in range(game_size[0]):
                 for y0 in range(game_size[1]):
@@ -157,7 +164,8 @@ class MyQtGUI:
         self._entry = MyQtLineEdit(None, self._window)
         self._entry.setMaximumWidth(500)
 
-        self._buttons = [[QPushButton(f"Button {r + 1}-{c + 1}") for c in range(2)] for r in range(4)]
+        self._buttons = []
+        # self._buttons = [[QPushButton(f"Button {r + 1}-{c + 1}") for c in range(2)] for r in range(4)]
 
         # 布局
         layout = QGridLayout()
@@ -174,11 +182,11 @@ class MyQtGUI:
 
         button_layout = QBoxLayout(QBoxLayout.TopToBottom)
         self._button_layout = button_layout
-        for r in range(1):
-            for c in range(2):
-                # button_layout.addWidget(self._buttons[r][c], r, c)
-                self._button_layout.addWidget(self._buttons[r][c])
-                pass
+        # for r in range(1):
+        #     for c in range(2):
+        #         # button_layout.addWidget(self._buttons[r][c], r, c)
+        #         self._button_layout.addWidget(self._buttons[r][c])
+        #         pass
         layout.addLayout(self._button_layout, 0, 1, 2, 1)  # 按钮列在右侧
 
         text_layout = MyQtTextColBoxLayout()
@@ -194,7 +202,7 @@ class MyQtGUI:
         self._main_timer = QTimer()
         # self._timer.timeout.connect(rrr)
         self._main_timer.timeout.connect(update_callback)
-        self._main_timer.start(25)
+        self._main_timer.start(110)
         sys.exit(self._app.exec_())
         pass
 

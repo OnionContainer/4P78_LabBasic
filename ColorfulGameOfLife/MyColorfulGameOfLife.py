@@ -180,30 +180,14 @@ class MyColorfulGameOfLife:
     def get_difference_history(self):
         return self._difference_history
 
-    def __init__(self):
+    def __init__(self, width = 50, height = 60):
         super().__init__()
         self._history_key_matrix: List[NDArray[int32]] = []
         self._rule_set: RuleSet | None = None
         self._convolution_kernel = np.ones((3, 3), dtype=int)
         self._convolution_kernel[1, 1] = 0
         self._game_size = (
-            int(hot("game_width", 50)),
-            int(hot("game_height", 60))
+            width,
+            height
         )
         self._difference_history:List[float] = []
-
-
-# r = RuleSet()
-# r.add_cell_type(CellType(
-#     generate_condition={83},
-#     death_condition={80,81,84,85,86,87,88},
-#     contribution=11
-# ))
-#
-# # print(r.get_cell_types_length())
-#
-# g = MyColorfulGameOfLife()
-# g.setup_rule_set(r)
-# g.iterate(200)
-# print("what is happening here?")
-# print(g.get_recent_history_key_matrix())

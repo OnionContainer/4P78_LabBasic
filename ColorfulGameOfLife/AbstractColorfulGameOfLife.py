@@ -21,6 +21,14 @@ class CellType:
         self._death_condition = death_condition
         self._contribution = contribution
 
+    @staticmethod
+    def conway():
+        return CellType(
+            generate_condition={83},
+            death_condition={80,81,84,85,86,87,88},
+            contribution=11
+        )
+
     def get_generate_condition(self)->Iterable:
         return tuple(self._generate_condition)
 
